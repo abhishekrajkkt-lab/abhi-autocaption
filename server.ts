@@ -1,6 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
+import JSZip from 'jszip';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI, Type } from '@google/genai';
 
@@ -423,6 +425,48 @@ ${JSON.stringify(captions.map((c: any) => ({ id: c.id, text: c.text })))}`,
       };
     });
     res.json({ success: true, data: localResults });
+  }
+});
+
+/**
+ * Endpoint to download the entire codebase as a clean zip file
+ */
+function addDirectoryToZip(zip: JSZip, localDir: string, zipFolder: JSZip) {
+  const entries = fs.readdirSync(localDir);
+  for (const entry of entries) {
+    if (['node_modules', 'dist', '.git', '.aistudio', '.cache', '.turbo'].includes(entry)) {
+      continue;
+    }
+    const fullPath = path.join(localDir, entry);
+    const stat = fs.statSync(fullPath);
+    if (stat.isDirectory()) {
+      const subZipFolder = zipFolder.folder(entry);
+      if (subZipFolder) {
+        addDirectoryToZip(zip, fullPath, subZipFolder);
+      }
+    } else {
+      const fileData = fs.readFileSync(fullPath);
+      zipFolder.file(entry, fileData);
+    }
+  }
+}
+
+app.get('/api/download-source-zip', async (req, res) => {
+  try {
+    const zip = new JSZip();
+    addDirectoryToZip(zip, __dirname, zip);
+    const zipBuffer = await zip.generateAsync({
+      type: 'nodebuffer',
+      compression: 'DEFLATE',
+      compressionOptions: { level: 6 },
+    });
+
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', 'attachment; filename="reeltype-studio-source.zip"');
+    res.send(zipBuffer);
+  } catch (error: any) {
+    console.error('Error generating source zip:', error);
+    res.status(500).json({ success: false, error: 'Failed to package project zip' });
   }
 });
 

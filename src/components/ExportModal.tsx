@@ -6,11 +6,13 @@ import {
   Video,
   Check,
   Film,
+  Code2,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { CaptionItem, CaptionTemplate, StyleSettings } from '../types';
 import { exportToSrt, exportToVtt, triggerFileDownload } from '../utils/subtitles';
 import { exportBurnedVideo } from '../utils/canvasRenderer';
+import { downloadProjectSourceZip } from '../utils/downloadCode';
 
 interface ExportModalProps {
   isOpen: boolean;
@@ -267,6 +269,29 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                 ) : (
                   <FileText className="w-3.5 h-3.5 text-white/40 group-hover:text-white" />
                 )}
+              </button>
+            </div>
+
+            {/* Complete Project Code ZIP */}
+            <div className="pt-2">
+              <button
+                onClick={() => downloadProjectSourceZip(projectName)}
+                className="w-full p-3 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 rounded-2xl text-left transition-all group flex items-center justify-between"
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-purple-500/20 flex items-center justify-center text-purple-300">
+                    <Code2 className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-white group-hover:text-purple-300">
+                      Download Full Project Source Code (.ZIP)
+                    </div>
+                    <div className="text-[9px] text-white/50">
+                      Complete React + Express + TypeScript + Gemini studio repository
+                    </div>
+                  </div>
+                </div>
+                <Download className="w-4 h-4 text-purple-300 group-hover:scale-110 transition-transform" />
               </button>
             </div>
           </div>

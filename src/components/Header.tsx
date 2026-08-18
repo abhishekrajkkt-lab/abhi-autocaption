@@ -9,8 +9,10 @@ import {
   RectangleVertical,
   Check,
   Edit2,
+  Code2,
 } from 'lucide-react';
 import { AspectRatio } from '../types';
+import { downloadProjectSourceZip } from '../utils/downloadCode';
 
 interface HeaderProps {
   projectName: string;
@@ -181,6 +183,15 @@ export const Header: React.FC<HeaderProps> = ({
           <span className="px-1.5 py-0.2 bg-white/20 text-[9px] font-extrabold rounded-full uppercase">
             AI
           </span>
+        </button>
+
+        <button
+          onClick={() => downloadProjectSourceZip(projectName)}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-semibold text-white/80 hover:text-white transition-all hover:border-white/20"
+          title="Download full project code as ZIP"
+        >
+          <Code2 className="w-3.5 h-3.5 text-purple-400" />
+          <span className="hidden sm:inline">Download Code</span>
         </button>
 
         <button
