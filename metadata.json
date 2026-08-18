@@ -1,0 +1,7 @@
+{
+  "name": "Reeltype Studio — AI Auto Captions & Viral Subtitle Editor",
+  "description": "Create viral Shorts, Reels, and TikToks with AI auto-captions, word-by-word dynamic highlights, 20+ creator style templates, speech-to-text timing, and direct browser video export.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
